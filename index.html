@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ចេះ · Khmer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&family=Noto+Serif+Khmer:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F4F5F2;--surface:#FFFFFF;--sunk:#EBEDE8;
+  --line:#D6DAD3;--line-soft:#E4E7E1;
+  --ink:#1B211D;--ink-soft:#545C55;--ink-faint:#7C857D;
+  --accent:#0E6B62;--accent-bright:#13897D;--accent-wash:#E2EFEC;
+  --gold:#9A6F1E;--gold-wash:#F3EBD9;
+  --warn:#8C3A2B;--warn-wash:#F6E7E3;
+  --ok:#2E6B3E;--ok-wash:#E4EFE6;
+  --fd:"Newsreader",Georgia,serif;
+  --fu:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --fk:"Noto Serif Khmer","Khmer OS",serif;
+  --fm:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#121614;--surface:#1A1F1C;--sunk:#232925;
+  --line:#333B36;--line-soft:#2A312C;
+  --ink:#E8EBE7;--ink-soft:#A8B1A9;--ink-faint:#7B857D;
+  --accent:#55BFB1;--accent-bright:#6FD5C6;--accent-wash:#1B2E2B;
+  --gold:#D6AC5E;--gold-wash:#2C2617;
+  --warn:#E09080;--warn-wash:#2E1C18;
+  --ok:#7FC08E;--ok-wash:#1B2A1F;
+}}
+:root[data-theme="dark"]{
+  --ground:#121614;--surface:#1A1F1C;--sunk:#232925;
+  --line:#333B36;--line-soft:#2A312C;
+  --ink:#E8EBE7;--ink-soft:#A8B1A9;--ink-faint:#7B857D;
+  --accent:#55BFB1;--accent-bright:#6FD5C6;--accent-wash:#1B2E2B;
+  --gold:#D6AC5E;--gold-wash:#2C2617;
+  --warn:#E09080;--warn-wash:#2E1C18;
+  --ok:#7FC08E;--ok-wash:#1B2A1F;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ground);color:var(--ink);font-family:var(--fu);
+  font-size:1.15rem;line-height:1.6;-webkit-font-smoothing:antialiased;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.wrap{max-width:660px;margin:0 auto;padding:0 1.1rem 6rem}
+
+/* header */
+header{padding:1.6rem 0 .9rem;display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
+header h1{
+  font-family:var(--fk);font-weight:600;font-size:2rem;margin:0;
+  color:var(--accent);line-height:1.6;
+}
+header .sub{font-size:.95rem;color:var(--ink-faint);margin-left:auto;font-family:var(--fm)}
+
+/* tabs */
+nav{display:flex;gap:.35rem;border-bottom:1px solid var(--line);margin-bottom:1.4rem;overflow-x:auto}
+nav button{
+  font-family:var(--fu);font-size:1.02rem;font-weight:600;
+  background:none;border:none;border-bottom:2.5px solid transparent;
+  color:var(--ink-faint);padding:.6rem .8rem;cursor:pointer;white-space:nowrap;
+}
+nav button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+nav button:focus-visible{outline:2px solid var(--accent-bright);outline-offset:-2px}
+
+/* generic */
+h2{font-family:var(--fd);font-weight:500;font-size:1.7rem;margin:2rem 0 .6rem;letter-spacing:-.01em}
+h2:first-child{margin-top:0}
+h3{font-size:1.08rem;font-weight:600;margin:1.4rem 0 .4rem;color:var(--accent)}
+p{margin:.6rem 0}
+.muted{color:var(--ink-soft);font-size:1.05rem}
+.kh{font-family:var(--fk);line-height:1.75}
+.rom{font-family:var(--fm);font-size:.95em;color:var(--accent);font-style:normal}
+.ipa{font-family:var(--fm);font-size:.92em;color:var(--ink-faint);white-space:nowrap}
+
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  padding:1.2rem 1.3rem;margin:1rem 0;
+}
+.pill{
+  display:inline-block;font-family:var(--fm);font-size:.72rem;
+  padding:.14rem .45rem;border-radius:3px;vertical-align:middle;
+  background:var(--sunk);color:var(--ink-faint);
+}
+.pill.ok{background:var(--ok-wash);color:var(--ok)}
+.pill.val{background:var(--gold-wash);color:var(--gold)}
+.pill.no{background:var(--warn-wash);color:var(--warn)}
+
+button.act{
+  font-family:var(--fu);font-size:1.05rem;font-weight:600;
+  padding:.7rem 1.2rem;border-radius:5px;border:1.5px solid var(--line);
+  background:var(--surface);color:var(--ink);cursor:pointer;
+}
+button.act:hover{border-color:var(--accent);color:var(--accent)}
+button.act.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+button.act.pri:hover{background:var(--accent-bright);border-color:var(--accent-bright);color:#fff}
+button.act:focus-visible{outline:2px solid var(--accent-bright);outline-offset:2px}
+.row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+
+/* session card */
+.q{text-align:center;padding:2.2rem 1.3rem}
+.q .prompt-kh{font-family:var(--fk);font-size:3.1rem;line-height:1.6;font-weight:500;word-break:break-word}
+.q .prompt-fr{font-family:var(--fd);font-size:2rem;line-height:1.25;font-weight:500}
+.q .rom{display:block;font-size:1.15rem;margin-top:.3rem}
+.q .answer{margin-top:1.4rem;padding-top:1.3rem;border-top:1px dashed var(--line)}
+.q .answer .fr{font-size:1.35rem}
+.q .note{font-size:1rem;color:var(--ink-soft);margin-top:.8rem;text-align:left}
+
+/* qcm */
+.opts{display:flex;flex-direction:column;gap:.55rem;margin-top:1.2rem}
+.opts button{
+  font-family:var(--fu);font-size:1.08rem;text-align:left;
+  padding:.75rem .95rem;border-radius:5px;border:1.5px solid var(--line);
+  background:var(--surface);color:var(--ink);cursor:pointer;
+}
+.opts button:hover:not(:disabled){border-color:var(--accent)}
+.opts button:disabled{cursor:default;opacity:.75}
+.opts button.good{border-color:var(--ok);background:var(--ok-wash);opacity:1}
+.opts button.bad{border-color:var(--warn);background:var(--warn-wash);opacity:1}
+.gabarit{
+  font-family:var(--fm);font-size:1rem;background:var(--sunk);
+  border:1px solid var(--line-soft);border-radius:5px;
+  padding:.8rem .9rem;margin:.9rem 0;overflow-x:auto;white-space:nowrap;text-align:center;
+}
+.gabarit b{color:var(--accent)}
+
+/* progress */
+.bar{height:6px;background:var(--sunk);border-radius:99px;overflow:hidden;margin:.5rem 0}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .25s}
+.stats{display:flex;gap:1.4rem;flex-wrap:wrap;margin:.5rem 0 1rem}
+.stats div{display:flex;align-items:baseline;gap:.35rem}
+.stats b{font-family:var(--fd);font-size:1.5rem;font-weight:500;font-variant-numeric:tabular-nums}
+.stats span{font-size:.92rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.05em}
+
+/* bloc list */
+.bloc{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:.9rem 0;overflow:hidden}
+.bloc-h{display:flex;align-items:baseline;gap:.8rem;padding:.9rem 1.1rem;background:var(--sunk);flex-wrap:wrap}
+.bloc-h .n{font-family:var(--fm);font-size:.85rem;color:var(--accent)}
+.bloc-h h3{margin:0;flex:1 1 auto;color:var(--ink);font-size:1.12rem}
+.bloc-b{padding:1rem 1.1rem}
+.regle{font-family:var(--fd);font-size:1.2rem;line-height:1.4}
+
+/* dico */
+.entry{display:flex;gap:.9rem;align-items:baseline;padding:.6rem 0;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.entry .kh{font-size:1.6rem;min-width:5.5rem}
+.entry .fr{color:var(--ink-soft);flex:1 1 8rem}
+input[type=search]{
+  width:100%;font-family:var(--fu);font-size:1.08rem;padding:.6rem .8rem;
+  border:1.5px solid var(--line);border-radius:5px;background:var(--surface);color:var(--ink);
+}
+input[type=search]:focus-visible{outline:2px solid var(--accent-bright);outline-offset:1px}
+
+.call{border-left:3px solid var(--gold);background:var(--gold-wash);padding:.9rem 1.1rem;margin:1rem 0;font-size:1.04rem;color:var(--ink-soft)}
+.call.warn{border-left-color:var(--warn);background:var(--warn-wash)}
+.call strong{color:var(--ink)}
+
+footer{margin-top:3rem;padding-top:1.2rem;border-top:1px solid var(--line-soft);font-size:.95rem;color:var(--ink-faint)}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>ចេះ</h1>
+  <div class="sub"><span id="build-stamp">159 mots · 8 blocs · 144 vérifiés · 2026-08-21</span></div>
+</header>
+
+<nav role="tablist">
+  <button role="tab" id="t-rev"  aria-selected="true"  onclick="go('rev')">Réviser</button>
+  <button role="tab" id="t-bloc" aria-selected="false" onclick="go('bloc')">Blocs</button>
+  <button role="tab" id="t-sons" aria-selected="false" onclick="go('sons')">Sons</button>
+  <button role="tab" id="t-dico" aria-selected="false" onclick="go('dico')">Dico</button>
+  <button role="tab" id="t-val"  aria-selected="false" onclick="go('val')">À valider</button>
+</nav>
+
+<main>
+  <section id="p-rev"></section>
+  <section id="p-bloc" class="hidden"></section>
+  <section id="p-sons" class="hidden"></section>
+  <section id="p-dico" class="hidden"></section>
+  <section id="p-val"  class="hidden"></section>
+</main>
+
+<footer>
+  Progression enregistrée dans ce navigateur. Les mots marqués
+  <span class="pill val">à valider</span> attendent la confirmation d'un locuteur natif.
+</footer>
+
+</div>
+
+<script>
+/* ================= données injectées par tools/build.py ================= */
+const EMBED_MOTS = [{"id":15,"kh":"សូមស្វាគមន៍","rom":"soum svaakum","fr":"bienvenue","niveau":2,"section":"Politesse et premiers mots","statut":"verifie","source":"https://en.wiktionary.org/wiki/ស្វាគមន៍ ; https://en.wiktionary.org/wiki/សូម ; https://km.wiktionary.org/wiki/សូមស្វាគមន៍","note":"Wiktionary anglais confirme ស្វាគមន៍ = svaakum /sʋaːˈkum/ (bienvenue) et សូម = soum /soum/ (particule de politesse 'veuillez'). La forme composée សូមស្វាគមន៍ est attestée comme unité (titre de la page de bienvenue du Wiktionary khmer).","ipa":"soum sʋaːkum","source_ipa":"https://en.wiktionary.org/wiki/សូម ; https://en.wiktionary.org/wiki/ស្វាគមន៍"},{"id":16,"kh":"ជូនពរ","rom":"cuun pɔɔ","fr":"souhaiter, bénir, exprimer ses voeux (plus poli que ឲ្យពរ)","niveau":3,"section":"Politesse et premiers mots","statut":"verifie","source":"https://kheng.info/search/?query=ជូនពរ","note":"kheng.info donne l'IPA /cuunpɔɔ/ et définit 'to wish well, extend/express good wishes, send regards'. Le sens n'est pas exactement 'féliciter' mais 'souhaiter/bénir', s'emploie dans des formules de voeux.","ipa":""},{"id":27,"kh":"ពួកគេ","rom":"puək kei","fr":"ils, elles","niveau":1,"section":"Personnes et famille","statut":"verifie","source":"https://en.wiktionary.org/wiki/ពួកគេ","note":"Composé de ពួក (puək, 'groupe') + គេ (kei, 'quelqu'un'), IPA /puəʔ ˈkei/, sens 'they'.","ipa":"puəʔ ˈkei"},{"id":39,"kh":"ជីតា","rom":"cii taa","fr":"grand-père","niveau":2,"section":"Personnes et famille","statut":"verifie","source":"http://www.sealang.net/monkhmer/database/retrieve.pl?language=Khmer&sort=gloss&format=html ; https://glosbe.com/km/fr/ជីតា","note":"SEAlang Mon-Khmer Languages Database donne cii taa /ciː taː/ 'grandfather'.","ipa":""},{"id":40,"kh":"ជីដូន","rom":"cii doun","fr":"grand-mère","niveau":2,"section":"Personnes et famille","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជីដូន","note":"IPA /ciː ˈɗoun/, sens 'grandmother'.","ipa":"ciː ˈɗoun"},{"id":46,"kh":"មិត្តភក្តិ","rom":"mɨt.taʔ.pʰĕəʔ","fr":"ami","niveau":1,"section":"Personnes et famille","statut":"verifie","source":"https://en.wiktionary.org/wiki/មិត្តភក្តិ","note":"Sens 2 secondaire attesté : 'devotion to friends'.","ipa":"mɨt.taʔ.pʰĕəʔ"},{"id":47,"kh":"អ្នកជិតខាង","rom":"","fr":"voisin, voisine","niveau":3,"section":"Personnes et famille","statut":"a_valider","source":"https://glosbe.com/km/fr/អ្នកជិតខាង","note":"Attesté comme unité sur Glosbe. Aucune romanisation phonémique trouvée sur Wiktionary/SEAlang/kheng.info pour cette forme composée (អ្នក + ជិតខាង). — Graphie et sens vérifiés, mais aucune romanisation phonémique trouvée en source. Inutilisable tant que la prononciation n'est pas confirmée.","ipa":""},{"id":63,"kh":"ហេតុអ្វី","rom":"haet ʼaʼvəy","fr":"pourquoi","niveau":1,"section":"Pronoms, démonstratifs, questions","statut":"verifie","source":"https://en.wiktionary.org/wiki/ហេតុអ្វី","note":"IPA /haet ʔaʔ.ˈʋəj/, sens 'why'. Forme alternative notée : ហេតុអី (haet ʼəy).","ipa":"haet ʔaʔ.ˈʋəj"},{"id":65,"kh":"យ៉ាងម៉េច","rom":"","fr":"de quelle manière, comment","niveau":1,"section":"Pronoms, démonstratifs, questions","statut":"a_valider","source":"https://en.wiktionary.org/wiki/Appendix:Khmer_Swadesh_list ; https://en.wiktionary.org/wiki/យ៉ាង","note":"La forme composée យ៉ាងម៉េច n'est attestée telle quelle dans aucune source consultée. Le composant យ៉ាង (yaang, 'sorte, manière') est confirmé sur Wiktionary. La liste Swadesh khmère donne pour 'how' ម្ដេច (mdəc) et យ៉ាងដូចម្តេច (jaːŋ doːc mdəc), proches mais non identiques à ម៉េច.","ipa":""},{"id":76,"kh":"ពិសា","rom":"pisaa","fr":"manger (poli)","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ពិសា","note":"","ipa":"pi.ˈsaː"},{"id":78,"kh":"ដេក","rom":"deek","fr":"dormir, se coucher (aussi : s'allonger, rester inactif, faire la sieste)","niveau":1,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដេក","note":"Sens secondaires attestés : s'allonger, être oisif, faire une sieste.","ipa":"ɗeːk"},{"id":79,"kh":"ក្រោក","rom":"kraok","fr":"se lever, se mettre debout","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ក្រោក","note":"","ipa":"kraok"},{"id":81,"kh":"រត់","rom":"rŭət","fr":"courir","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/រត់","note":"Translit brouillon 'rot' remplacée par la romanisation phonémique Wiktionary 'rŭət'.","ipa":"rŭət"},{"id":83,"kh":"ឈរ","rom":"chɔɔ","fr":"se tenir debout","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឈរ","note":"Translit brouillon 'chhor' remplacée par la romanisation phonémique Wiktionary 'chɔɔ'.","ipa":"cʰɔː"},{"id":86,"kh":"ឮ","rom":"lɨɨ","fr":"entendre","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឮ","note":"Translit brouillon 'leu' remplacée par la romanisation phonémique Wiktionary 'lɨɨ' (IPA /lɨː/). Sens secondaire : être entendu.","ipa":"lɨː"},{"id":99,"kh":"ស្អប់","rom":"sʼɑp","fr":"détester, haïr","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ស្អប់","note":"","ipa":"sʔɑp"},{"id":102,"kh":"គួរ","rom":"kuə","fr":"devrait, devoir (verbe modal) ; aussi adjectif : convenable, digne","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/គួរ","note":"Translit brouillon 'kuor' remplacée par la romanisation phonémique Wiktionary 'kuə'.","ipa":"kuə"},{"id":107,"kh":"បង់","rom":"bɑng","fr":"payer","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/បង់","note":"Mot polysémique (plusieurs étymologies) : payer / perdre-gaspiller / pincée (classificateur) / banque / bande (radio). Translit brouillon 'bong' remplacée par 'bɑng' (IPA /ɓɑŋ/).","ipa":"ɓɑŋ"},{"id":109,"kh":"រង់ចាំ","rom":"rŭəng cam","fr":"attendre","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/រង់ចាំ","note":"Composé synonymique de រង់ (rŭəng, 'attendre') + ចាំ (cam, 'attendre'). Wiktionary signale que la variante រងចាំ (rɔɔng cam) est parfois utilisée mais considérée incorrecte.","ipa":"rŭəŋ ˈcam"},{"id":110,"kh":"ចាប់ផ្តើម","rom":"capphtaəm","fr":"commencer","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Khmer","note":"Pas de page Wiktionary dédiée au composé ; romanisation phonémique récupérée depuis la liste de fréquence Wiktionary, qui liste séparément ចាប់ផ្តើម (capphtaəm) et ផ្តើម (phtaəm), toutes deux traduites par 'start'. Le composant ចាប់ a sa propre entrée (cap, 'saisir ; attraper ; commencer'). Sens confirmé aussi via Glosbe.","ipa":""},{"id":112,"kh":"បញ្ចប់","rom":"bɑñcɑp","fr":"terminer","niveau":3,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/បញ្ចប់","note":"Dérivé de ចប់ (cɑp, 'finir') par préfixation bVN-. Existe aussi comme adjectif : 'dernier, final, conclusif'.","ipa":"ɓɑɲ.cɑp"},{"id":117,"kh":"ចេញ","rom":"cəñ","fr":"sortir, partir","niveau":1,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចេញ","note":"Verbe et adverbe. Sens additionnels : 'paraître, être publié', 'émettre, débourser (argent)', 'gagner', 'jouer (une carte)'.","ipa":"cəɲ"},{"id":119,"kh":"ឡើង","rom":"laəng","fr":"monter","niveau":1,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឡើង","note":"Aussi adverbe ('vers le haut, en amont, de plus en plus') et préposition ('sur'). Sens verbaux additionnels : décoller, embarquer, fermenter, augmenter, tenir une cérémonie.","ipa":"laəŋ"},{"id":120,"kh":"ចុះ","rom":"coh","fr":"descendre","niveau":1,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចុះ","note":"Verbe et adverbe ('vers le bas').","ipa":"coh"},{"id":122,"kh":"បត់","rom":"bɑt","fr":"tourner (dans une rue)","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/បត់","note":"Translittération phonémique corrigée par rapport au brouillon ('bot' -> 'bɑt', IPA /ɓɑt/). Verbe : plier, tourner, faire demi-tour, dévier ; aussi adjectif (sinueux, pliable).","ipa":"ɓɑt"},{"id":128,"kh":"ឆ្លើយ","rom":"chlaəy","fr":"répondre","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឆ្លើយ","note":"Sens additionnels : résonner, retentir ; (archaïque, contexte juridique) déclarer.","ipa":"cʰlaəj"},{"id":131,"kh":"ហៅ","rom":"haw","fr":"appeler","niveau":1,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ហៅ","note":"Sens additionnels : nommer, héler (un taxi), inviter, commander (au restaurant). Étymologie sanskrite हव (hava).","ipa":"haw"},{"id":132,"kh":"រក","rom":"rɔɔk","fr":"chercher","niveau":1,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/រក","note":"signifie aussi « chercher », « rechercher », « demander »","ipa":"rɔːʔ"},{"id":133,"kh":"រកឃើញ","rom":"","fr":"trouver","niveau":2,"section":"Verbes essentiels","statut":"a_valider","source":"","note":"Mot composé (រក « chercher » + ឃើញ « voir ») ; pas d'entrée Wiktionary dédiée trouvée. Chaque composant existe mais l'unité lexicale n'est pas attestée comme entrée propre.","ipa":""},{"id":138,"kh":"សម្រាក","rom":"sɑmraak","fr":"se reposer","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/សម្រាក","note":"Forme alternative de សំរាក ; Wiktionary : « to rest, to relax »","ipa":"sɑm.raːʔ"},{"id":139,"kh":"ព្យាយាម","rom":"pyiəyiəm","fr":"essayer, s'efforcer","niveau":3,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ព្យាយាម","note":"Wiktionary : « to persist, to persevere, to try hard » (emprunt sanskrit vyāyāma)","ipa":"pʰjiə.ˈjiəm"},{"id":140,"kh":"សម្រេច","rom":"sɑmrac","fr":"décider ; accomplir","niveau":3,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/សម្រេច","note":"Wiktionary : « to decide, to resolve; to succeed, achieve, produce results »","ipa":"sɑm.ˈrac"},{"id":141,"kh":"ជឿ","rom":"cɨə","fr":"croire","niveau":2,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជឿ","note":"","ipa":"cɨə"},{"id":142,"kh":"សង្ឃឹម","rom":"sɑngkhɨm","fr":"espérer","niveau":3,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/សង្ឃឹម","note":"Aussi nom : « hope »","ipa":"sɑŋ.ˈkʰɨm"},{"id":143,"kh":"ចាំបាច់","rom":"cambac","fr":"être nécessaire","niveau":3,"section":"Verbes essentiels","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចាំបាច់","note":"Wiktionary (adjectif) : « necessary; essential »","ipa":"cam.ˈɓac"},{"id":146,"kh":"ភ័យ","rom":"phɨy","fr":"avoir peur","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/ភ័យ","note":"Wiktionary : « fear, fright » (du pali/sanskrit bhaya)","ipa":"pʰɨj"},{"id":147,"kh":"ខឹង","rom":"khəng","fr":"être en colère","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/ខឹង","note":"","ipa":"kʰəŋ"},{"id":148,"kh":"នឿយហត់","rom":"nɨəy hɑt","fr":"être fatigué","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/នឿយហត់","note":"Composé de នឿយ (nɨəy, tired) + ហត់ (hɑt, tired), attesté comme entrée composée sur Wiktionary","ipa":"nɨəj ˈhɑt"},{"id":152,"kh":"ជា","rom":"ciə","fr":"guérir, aller mieux","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជា","note":"« to be well, healthy, to have recovered; to recover, get better »","ipa":"ciə"},{"id":154,"kh":"រស់","rom":"rŭəh","fr":"vivre","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/រស់","note":"","ipa":"rŭəh","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9A%E1%9E%9F%E1%9F%8B"},{"id":155,"kh":"កើត","rom":"kaət","fr":"naître ; survenir","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/កើត","note":"","ipa":"kaət","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%80%E1%9E%BE%E1%9E%8F"},{"id":160,"kh":"ត្រចៀក","rom":"trɑciək","fr":"oreille","niveau":2,"section":"États, sensations, santé","statut":"verifie","source":"https://en.wiktionary.org/wiki/ត្រចៀក","note":"","ipa":"trɑ.ˈciəʔ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%8F%E1%9F%92%E1%9E%9A%E1%9E%85%E1%9F%80%E1%9E%80"},{"id":167,"kh":"គ្រុនក្តៅ","rom":"","fr":"fièvre","niveau":3,"section":"États, sensations, santé","statut":"a_valider","source":"","note":"Composé non attesté comme entrée Wiktionary dédiée. Composants vérifiés séparément : គ្រុន (krun, « fever ») + ក្តៅ (kdaw, « hot »).","ipa":""},{"id":175,"kh":"ទាប","rom":"tiəp","fr":"bas","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទាប","note":"","ipa":"tiəp","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%91%E1%9E%B6%E1%9E%94"},{"id":179,"kh":"កខ្វក់","rom":"kɑkvɑk","fr":"sale","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/កខ្វក់","note":"","ipa":"kɑʔ.ˈʋɑʔ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%80%E1%9E%81%E1%9F%92%E1%9E%9C%E1%9E%80%E1%9F%8B"},{"id":186,"kh":"ល្វីង","rom":"lviing","fr":"amer","niveau":3,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ល្វីង","note":"Sens supplémentaire figuré : fed up with, sick and tired of","ipa":"lʋiːŋ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9B%E1%9F%92%E1%9E%9C%E1%9E%B8%E1%9E%84"},{"id":191,"kh":"យឺត","rom":"yɨɨt","fr":"lent, en retard","niveau":1,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/យឺត","note":"Adjectif et verbe ; emprunt au thaï ยืด (yʉ̂ʉt)","ipa":"jɨːt","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%99%E1%9E%BA%E1%9E%8F"},{"id":192,"kh":"ងាយ","rom":"ngiəy","fr":"facile","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ងាយ","note":"Adjectif et adverbe ; dérive du thaï ง่าย (ngâai)","ipa":"ŋiəj","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%84%E1%9E%B6%E1%9E%99"},{"id":196,"kh":"មានបាន","rom":"","fr":"riche, aisé","niveau":3,"section":"Adjectifs et qualités","statut":"a_valider","source":"","note":"Composé de មាន (miən, « to have, to be rich ») + បាន (baan, « to get, to be OK ») ; entrée dédiée absente de Wiktionary.","ipa":""},{"id":198,"kh":"ថោក","rom":"thaok","fr":"bon marché","niveau":1,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ថោក","note":"Sens supplémentaire : petty, trivial ; dérivé du pali toka (small, little)","ipa":"tʰaok","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%90%E1%9F%84%E1%9E%80"},{"id":201,"kh":"ពេញ","rom":"pɨñ","fr":"plein","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ពេញ","note":"Sens : full, complete; whole, entire","ipa":"pɨɲ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%96%E1%9F%81%E1%9E%89"},{"id":202,"kh":"ទទេ","rom":"tɔtei","fr":"vide","niveau":3,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទទេ","note":"Sens supplémentaires : naked, bare, free, idle, useless, in vain, gratis, empty-handed","ipa":"tɔ.ˈtei","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%91%E1%9E%91%E1%9F%81"},{"id":203,"kh":"ធ្ងន់","rom":"thngŭən","fr":"lourd","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ធ្ងន់","note":"Sens supplémentaires : serious, grave, important, significant","ipa":"tʰŋŭən","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%92%E1%9F%92%E1%9E%84%E1%9E%93%E1%9F%8B"},{"id":204,"kh":"ស្រាល","rom":"sraal","fr":"léger","niveau":3,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ស្រាល","note":"Sens supplémentaires : petty (crimes), early (crops)","ipa":"sraːl","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9F%E1%9F%92%E1%9E%9A%E1%9E%B6%E1%9E%9B"},{"id":205,"kh":"មមាញឹក","rom":"","fr":"occupé","niveau":3,"section":"Adjectifs et qualités","statut":"a_valider","source":"https://glosbe.com/km/fr/%E1%9E%98%E1%9E%98%E1%9E%B6%E1%9E%89%E1%9E%B9%E1%9E%80","note":"Absent de Wiktionary et de SEAlang (certificat expiré, source inaccessible). Glosbe ne donne aucune traduction directe, seulement une définition khmère (« ដែលប្រញឹកខ្លាំង, ដែលញឹកញាប់ពេកឥតស្រាក » : quelque chose de très pressé, de trop fréquent sans repos), ce qui va dans le sens d'« occupé » sans le confirmer formellement. Deux dictionnaires non prioritaires (antkh.com, translate.com) donnent des sens contradictoires (« urgent » / « munificent »), signe de bruit. Graphie et sens conservés tels quels par prudence, à faire valider par un locuteur natif.","ipa":""},{"id":206,"kh":"ទំនេរ","rom":"tumnei","fr":"libre, disponible","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទំនេរ","note":"","ipa":"tum.ˈnei","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%91%E1%9F%86%E1%9E%93%E1%9F%81%E1%9E%9A"},{"id":207,"kh":"សំខាន់","rom":"sɑmkhan","fr":"important","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/សំខាន់","note":"Réempruntée au thaï សំគាល់/สำคัญ, elle-même dérivée du khmer សំគាល់ (remarquer, distinguer).","ipa":"sɑm.ˈkʰan","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9F%E1%9F%86%E1%9E%81%E1%9E%B6%E1%9E%93%E1%9F%8B"},{"id":208,"kh":"ពិត","rom":"pɨt","fr":"vrai, réel","niveau":2,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ពិត","note":"Le mot a aussi des sens de verbe (informer, dénoncer) et un sens de nom emprunté au hokkien (petit pinceau), non retenus ici.","ipa":"pɨt","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%96%E1%9E%B7%E1%9E%8F"},{"id":213,"kh":"គ្រប់គ្រាន់","rom":"krup krŏən","fr":"suffisant","niveau":3,"section":"Adjectifs et qualités","statut":"verifie","source":"https://en.wiktionary.org/wiki/គ្រប់គ្រាន់","note":"Composé allitératif de គ្រប់ (krup) et គ្រាន់ (krŏən).","ipa":"krup ˈkrŏən","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%82%E1%9F%92%E1%9E%9A%E1%9E%94%E1%9F%8B%E1%9E%82%E1%9F%92%E1%9E%9A%E1%9E%B6%E1%9E%93%E1%9F%8B"},{"id":217,"kh":"បៃតង","rom":"baytɑɑng","fr":"vert","niveau":2,"section":"Couleurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/បៃតង","note":"Emprunt au thaï ใบตอง (bai-dtɔɔng, feuille de bananier), glissé vers le nom de la couleur.","ipa":"ɓaj.ˈtɑːŋ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%94%E1%9F%83%E1%9E%8F%E1%9E%84"},{"id":218,"kh":"លឿង","rom":"lɨəng","fr":"jaune","niveau":2,"section":"Couleurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/លឿង","note":"Emprunt au thaï เหลือง (lʉ̌ʉang, jaune).","ipa":"lɨəŋ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9B%E1%9E%BF%E1%9E%84"},{"id":221,"kh":"ត្នោត","rom":"tnaot","fr":"brun","niveau":3,"section":"Couleurs","statut":"verifie","source":"https://glosbe.com/km/fr/%E1%9E%8F%E1%9F%92%E1%9E%93%E1%9F%84%E1%9E%8F","note":"Wiktionary ne donne que le sens premier « sucre/palmier à sucre (Borassus spp.) », sans sens adjectival de couleur. Glosbe confirme que le composé ពណ៌ត្នោត (« couleur ត្នោត ») se traduit par « brun · marron » ; comme pour d'autres couleurs dérivées de fruits/plantes, ត្នោត seul est employé couramment pour « brun ». À faire confirmer par un locuteur natif si usage isolé (sans ពណ៌) questionné.","ipa":"tʰnaot","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%8F%E1%9F%92%E1%9E%93%E1%9F%84%E1%9E%8F"},{"id":226,"kh":"រសៀល","rom":"rɔsiəl","fr":"après-midi","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/រសៀល","note":"Sens précis : de midi à 17h environ. A aussi un sens verbal secondaire (être sur le point de, approcher de la mort), non retenu ici.","ipa":"rɔ.ˈsiəl","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9A%E1%9E%9F%E1%9F%80%E1%9E%9B"},{"id":230,"kh":"សប្តាហ៍","rom":"sappədaa","fr":"semaine","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/សប្តាហ៍","note":"Emprunt savant au sanskrit सप्ताह (saptāha). Variante orthographique attestée : សប្តាហៈ.","ipa":"sap.pə.ɗaː","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9F%E1%9E%94%E1%9F%92%E1%9E%8F%E1%9E%B6%E1%9E%A0%E1%9F%8D"},{"id":240,"kh":"ពេលខ្លះ","rom":"peil khlah","fr":"parfois","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/ពេលខ្លះ","note":"Composé de ពេល (peil, temps) + ខ្លះ (khlah).","ipa":"peil ˈkʰlah","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%96%E1%9F%81%E1%9E%9B%E1%9E%81%E1%9F%92%E1%9E%9B%E1%9F%87"},{"id":241,"kh":"ជានិច្ច","rom":"ciə nɨc","fr":"toujours","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជានិច្ច","note":"Synonyme donné par Wiktionary : ជាដរាប (ciə dɑraap).","ipa":"ciə ˈnɨc","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%87%E1%9E%B6%E1%9E%93%E1%9E%B7%E1%9E%85%E1%9F%92%E1%9E%85"},{"id":243,"kh":"មិនដែល","rom":"mɨn dael","fr":"ne… jamais","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/មិនដែល","note":"Composé de មិន (ne pas) + ដែល (déjà, particule d'expérience).","ipa":"mɨn ˈɗael","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%98%E1%9E%B7%E1%9E%93%E1%9E%8A%E1%9F%82%E1%9E%9B"},{"id":244,"kh":"ភ្លាម","rom":"phliəm","fr":"tout de suite","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/ភ្លាម","note":"Dérivé attesté : ភ្លាមនោះ.","ipa":"pʰliəm","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%97%E1%9F%92%E1%9E%9B%E1%9E%B6%E1%9E%98"},{"id":246,"kh":"ឆាប់","rom":"chap","fr":"tôt, vite","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឆាប់","note":"Adjectif (rapide) et adverbe (en hâte, urgemment ; bientôt, tôt).","ipa":"cʰap","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%86%E1%9E%B6%E1%9E%94%E1%9F%8B"},{"id":248,"kh":"រួចហើយ","rom":"ruəc haəy","fr":"déjà fait","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/រួចហើយ","note":"Composé de រួច (terminé) + ហើយ (déjà/particule d'achèvement).","ipa":"ruəc ˈhaəj","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9A%E1%9E%BD%E1%9E%85%E1%9E%A0%E1%9E%BE%E1%9E%99"},{"id":249,"kh":"មិនទាន់","rom":"mɨn tŏən","fr":"pas encore","niveau":2,"section":"Le temps","statut":"verifie","source":"https://en.wiktionary.org/wiki/មិនទាន់","note":"Sens élargis attestés : ne pas être à l'heure (rater un train), survenir prématurément.","ipa":"mɨn ˈtŏən","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%98%E1%9E%B7%E1%9E%93%E1%9E%91%E1%9E%B6%E1%9E%93%E1%9F%8B"},{"id":274,"kh":"ម៉ឺន","rom":"məɨn","fr":"dix mille","niveau":2,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ម៉ឺន","note":"A aussi un sens historique (rang de dignitaire, fils de haut fonctionnaire), non retenu ici.","ipa":"məɨn","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%98%E1%9F%89%E1%9E%BA%E1%9E%93"},{"id":275,"kh":"លាន","rom":"liən","fr":"million","niveau":2,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/លាន","note":"Emprunt au thaï ล้าน (láan).","ipa":"liən","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%9B%E1%9E%B6%E1%9E%93"},{"id":276,"kh":"ទាំងអស់","rom":"tĕəng ʼɑh","fr":"tout, tous","niveau":1,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទាំងអស់","note":"Composé de ទាំង (tĕəng) + អស់ (ʼɑh).","ipa":"tĕəŋ ˈʔɑh","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%91%E1%9E%B6%E1%9F%86%E1%9E%84%E1%9E%A2%E1%9E%9F%E1%9F%8B"},{"id":277,"kh":"គ្រប់","rom":"krup","fr":"chaque, tout","niveau":2,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/គ្រប់","note":"Aussi « complet, plein ».","ipa":"krup","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%82%E1%9F%92%E1%9E%9A%E1%9E%94%E1%9F%8B"},{"id":278,"kh":"ខ្លះ","rom":"khlah","fr":"quelques, certains","niveau":1,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ខ្លះ","note":"Fonctionne aussi comme adverbe (« quelque peu »).","ipa":"kʰlah","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%81%E1%9F%92%E1%9E%9B%E1%9F%87"},{"id":282,"kh":"ជាង","rom":"ciəng","fr":"plus que","niveau":2,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជាង","note":"Homonyme signifiant aussi « artisan, ouvrier qualifié ».","ipa":"ciəŋ","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%87%E1%9E%B6%E1%9E%84"},{"id":283,"kh":"ជាងគេ","rom":"ciəng kei","fr":"le plus (superlatif)","niveau":2,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជាងគេ","note":"Composé de ជាង (plus que) + គេ (les autres). Forme intensifiée attestée : ជាងគេបំផុត.","ipa":"ciəŋ ˈkei","source_ipa":"https://en.wiktionary.org/wiki/%E1%9E%87%E1%9E%B6%E1%9E%84%E1%9E%82%E1%9F%81"},{"id":285,"kh":"គូ","rom":"kuu","fr":"paire","niveau":3,"section":"Nombres et quantités","statut":"verifie","source":"https://en.wiktionary.org/wiki/គូ","note":"Aussi « couple », « partenaire », classificateur de paires. Homonyme distinct signifiant « fossé, douve ».","ipa":"kuː"},{"id":286,"kh":"ពាក់កណ្តាល","rom":"","fr":"moitié","niveau":3,"section":"Nombres et quantités","statut":"a_valider","source":"https://en.wiktionary.org/wiki/កណ្ដាល","note":"Pas d'entrée propre pour le composé ni sur Wiktionary ni via recherche Glosbe/web. Élément កណ្ដាល confirmé sur Wiktionary (kɑndaal : milieu, centre). Élément ពាក់ confirmé sur Wiktionary mais uniquement avec les sens « porter, suspendre, enfiler » ; le sens « moitié » n'y apparaît pas et n'a pas pu être vérifié. Noter aussi que Wiktionary orthographie le second élément កណ្ដាល (lettre ដ), alors que l'entrée d'origine porte កណ្តាល (lettre ត) ; l'unité composée n'étant pas attestée, la graphie d'entrée est conservée par prudence plutôt que recomposée sans confirmation.","ipa":""},{"id":289,"kh":"អាហារ","rom":"ʼaahaa","fr":"nourriture, repas","niveau":1,"section":"Nourriture et boisson","statut":"verifie","source":"https://en.wiktionary.org/wiki/អាហារ","note":"Emprunt savant au sanskrit आहार (āhāra) ou au pali āhāra.","ipa":"ʔaː.ˈhaː"},{"id":297,"kh":"ស៊ុត","rom":"sut","fr":"œuf (registre formel)","niveau":1,"section":"Nourriture et boisson","statut":"verifie","source":"https://en.wiktionary.org/wiki/ស៊ុត","note":"Wiktionary donne ស៊ុត comme terme formel pour l'œuf, avec ពង (pɔɔng) comme synonyme courant.","ipa":"sut"},{"id":312,"kh":"ឆាន់","rom":"chan","fr":"manger, boire (registre formel, employé pour un moine)","niveau":3,"section":"Nourriture et boisson","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឆាន់","note":"ឆ្ងាន់ n'existe dans aucune source consultée (Wiktionary, recherche web). Le mot attesté le plus proche est ឆាន់ (chan), verbe formel « manger/boire » utilisé pour un moine bouddhiste, pas un simple équivalent poli de « déjeuner ». Sens à confirmer avec Daphnée : le mot cherché pourrait aussi être ពិសា (pisaa), autre registre formel plus général.","ipa":"cʰan"},{"id":315,"kh":"ទ្វារ","rom":"tviə","fr":"porte, entrée, ouverture","niveau":2,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទ្វារ","note":"Sens secondaires : col de montagne, baie/golfe.","ipa":"tʰʋiə"},{"id":316,"kh":"បង្អួច","rom":"bɑngʼuəc","fr":"fenêtre","niveau":2,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/បង្អួច","note":"","ipa":"ɓɑŋ.ˈʔuəc"},{"id":318,"kh":"កៅអី","rom":"kawʼəy","fr":"chaise, siège","niveau":1,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/កៅអី","note":"","ipa":"kaw.ˈʔəj"},{"id":319,"kh":"គ្រែ","rom":"krɛɛ","fr":"lit, couche","niveau":1,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/គ្រែ","note":"","ipa":"krɛː"},{"id":329,"kh":"ខោអាវ","rom":"khao ʼaaw","fr":"vêtements","niveau":1,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/ខោអាវ","note":"Composé dvandva de ខោ (pantalon) et អាវ (chemise/haut).","ipa":"kʰao ˈʔaːw"},{"id":330,"kh":"អាវ","rom":"ʼaaw","fr":"chemise, blouse, haut, manteau","niveau":1,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/អាវ","note":"Mot polysémique : autres entrées homographes désignent une baie/golfe, ou un adjectif « croûté, dur, sans valeur ».","ipa":"ʔaːw"},{"id":334,"kh":"កាបូប","rom":"kaaboup","fr":"sac, portefeuille","niveau":1,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/កាបូប","note":"Variante attestée : ក្របូប (krɑboup).","ipa":"kaː.ˈɓoup"},{"id":335,"kh":"សោ","rom":"sao","fr":"serrure, verrou","niveau":2,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/សោ","note":"សោ seul signifie « serrure/verrou », pas « clé ». La clé se dit កូនសោ (kūənsao, littéralement « enfant de la serrure »). Autres homographes : belle-sœur (aînée), et un adjectif « stupide, sans valeur ».","ipa":"sao"},{"id":337,"kh":"ឆ្នាំង","rom":"chnang","fr":"marmite, casserole, faitout","niveau":3,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឆ្នាំង","note":"","ipa":"cʰnaŋ"},{"id":338,"kh":"កន្ត្រៃ","rom":"kɑntray","fr":"ciseaux","niveau":3,"section":"Maison et objets","statut":"verifie","source":"https://en.wiktionary.org/wiki/កន្ត្រៃ","note":"","ipa":"kɑn.ˈtraj"},{"id":348,"kh":"មន្ទីរពេទ្យ","rom":"mŭəntii pɛɛt","fr":"hôpital, clinique","niveau":1,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/មន្ទីរពេទ្យ","note":"","ipa":"mŭən.ˈtiː pɛːt"},{"id":349,"kh":"ធនាគារ","rom":"thĕəʼniəkiə","fr":"banque","niveau":1,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/ធនាគារ","note":"Variante de prononciation également donnée : thɔɔniəkiə.","ipa":"tʰĕəʔ.niə.kiə"},{"id":350,"kh":"ភោជនីយដ្ឋាន","rom":"phoocĕəʼniiyĕəʼthaan","fr":"restaurant","niveau":2,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/ភោជនីយដ្ឋាន","note":"","ipa":"pʰoː.cĕəʔ.niː.jĕəʔ.tʰaːn"},{"id":352,"kh":"ព្រលានយន្តហោះ","rom":"","fr":"aéroport","niveau":2,"section":"Lieux et déplacements","statut":"a_valider","source":"https://en.wiktionary.org/wiki/យន្តហោះ","note":"Composé de deux éléments. យន្តហោះ (yŭən hɑh, « avion ») est confirmé sur Wiktionary. ព្រលាន n'a pas d'entrée propre trouvée (Wiktionary, kheng.info, recherche web) : le sens « terrain, aire » circule sur des pages non lexicographiques mais n'est pas sourcé. Le composé entier n'est attesté dans aucun dictionnaire consulté.","ipa":""},{"id":353,"kh":"ស្ថានីយ","rom":"sthaanii","fr":"gare, station","niveau":3,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/ស្ថានីយ","note":"","ipa":"stʰaː.ˈniː"},{"id":355,"kh":"ការិយាល័យ","rom":"kaariyaalay","fr":"bureau","niveau":2,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/ការិយាល័យ","note":"Synonyme donné : ទីចាត់ការ (tii cat kaa).","ipa":"kaː.ri.jaː.laj"},{"id":356,"kh":"បង្គន់","rom":"bɑngkŭən","fr":"toilettes, lavabo","niveau":2,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/បង្គន់","note":"Graphie du brouillon (បង់គន់) inexistante sur Wiktionary ; la forme attestée est បង្គន់.","ipa":"ɓɑŋ.ˈkŭən"},{"id":361,"kh":"ឡានក្រុង","rom":"laan krong","fr":"bus","niveau":1,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឡានក្រុង","note":"Composé de ឡាន (véhicule) et ក្រុង (ville).","ipa":"laːn ˈkroŋ"},{"id":363,"kh":"យន្តហោះ","rom":"yŭən hɑh","fr":"avion","niveau":1,"section":"Lieux et déplacements","statut":"verifie","source":"https://en.wiktionary.org/wiki/យន្តហោះ","note":"Synonyme donné : កប៉ាល់ហោះ (kaʼpal hɑh).","ipa":"jŭən ˈhɑh"},{"id":370,"kh":"ថ្លៃដើម","rom":"","fr":"prix de revient, coût de base","niveau":3,"section":"Lieux et déplacements","statut":"a_valider","source":"https://en.wiktionary.org/wiki/ដើម","note":"Composé de deux éléments. ថ្លៃ (thlay, « prix, coût ») et ដើម (daəm, « origine, base, capital ») sont confirmés séparément sur Wiktionary. Le composé lui-même n'a pas d'entrée dédiée dans les sources consultées, mais apparaît en usage économique (« prix de revient », « coût unitaire ») sur des pages non lexicographiques.","ipa":""},{"id":374,"kh":"មេឃ","rom":"meik","fr":"ciel, nuage, temps (météo)","niveau":2,"section":"Nature et animaux","statut":"verifie","source":"https://en.wiktionary.org/wiki/មេឃ","note":"","ipa":"meik"},{"id":379,"kh":"សមុទ្រ","rom":"saʼmot","fr":"mer, océan","niveau":2,"section":"Nature et animaux","statut":"verifie","source":"https://en.wiktionary.org/wiki/សមុទ្រ","note":"","ipa":"saʔ.ˈmot"},{"id":381,"kh":"ស្រែ","rom":"srae","fr":"rizière, champ","niveau":1,"section":"Nature et animaux","statut":"verifie","source":"https://en.wiktionary.org/wiki/ស្រែ","note":"","ipa":"srae"},{"id":393,"kh":"ឬ","rom":"rɨɨ","fr":"ou","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឬ","note":"A aussi un emploi de particule interrogative finale de phrase (« n'est-ce pas ? »).","ipa":"rɨː"},{"id":394,"kh":"ព្រោះ","rom":"prŭəh","fr":"parce que","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ព្រោះ","note":"Sens verbal premier : « semer des graines ». Synonyme conjonctif : ពីព្រោះ (pii prŭəh).","ipa":"prŭəh"},{"id":395,"kh":"ដូច្នេះ","rom":"doucneh","fr":"donc, ainsi","niveau":2,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដូច្នេះ","note":"Aussi adjectif (« être comme ceci, être de ce genre »). Comme adverbe : « so, thus, like this, this way » et « so, therefore » (connecteur de conséquence).","ipa":"ɗou.ˈcʰneh"},{"id":396,"kh":"បើ","rom":"baə","fr":"si","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/បើ","note":"Conjonction. Sens secondaire attesté : « although » (quoique).","ipa":"ɓaə"},{"id":397,"kh":"តែ","rom":"tae","fr":"mais ; seulement","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/តែ","note":"Homographe d'un nom signifiant « thé ». Conjonction : « but, however, if (ever) ». Adverbe : « only, just » ; sert aussi de particule dérivant des adverbes/adjectifs/conjonctions/préverbes composés.","ipa":"tae"},{"id":399,"kh":"ក៏","rom":"kɑɑ","fr":"aussi, alors (reprise)","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ក៏","note":"Conjonction. Deux sens documentés : « also, too » (constructions « à la fois... et... ») et « then, therefore, so, accordingly ».","ipa":"kɑː"},{"id":401,"kh":"ផង","rom":"phɑɑng","fr":"aussi, en plus","niveau":2,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ផង","note":"Conjonction/adverbe/particule. Comme particule : marque une requête polie (« please, would you ») et indique qu'une limite énoncée est moindre qu'elle aurait pu être.","ipa":"pʰɑːŋ"},{"id":405,"kh":"ដល់","rom":"dɑl","fr":"jusqu'à, arriver à","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដល់","note":"Verbe « to arrive, reach, attain » et préposition « to, up to, until ».","ipa":"ɗɑl"},{"id":408,"kh":"ក្រោម","rom":"kraom","fr":"sous","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ក្រោម","note":"Préposition simple : « under, below, beneath ».","ipa":"kraom"},{"id":410,"kh":"ក្រៅ","rom":"kraw","fr":"dehors, à l'extérieur","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ក្រៅ","note":"Wiktionary le classe adjectif : « outside; outer; foreign ».","ipa":"kraw"},{"id":412,"kh":"ខាង","rom":"khaang","fr":"côté, direction","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ខាង","note":"Nom « side, direction, part » ; aussi préposition (« in the field of, concerning ») et conjonction (« so long as, provided that »).","ipa":"kʰaːŋ"},{"id":413,"kh":"ចន្លោះ","rom":"cɑnlɑh","fr":"entre","niveau":3,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចន្លោះ","note":"Nom « interval, gap, area in between » et préposition « between ».","ipa":"cɑn.ˈlɑh"},{"id":414,"kh":"ជុំវិញ","rom":"cum vɨñ","fr":"autour de","niveau":3,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ជុំវិញ","note":"Adverbe (« around, surrounding ») et préposition (« around » ; aussi « about, concerning »).","ipa":"cum ˈʋɨɲ"},{"id":416,"kh":"នឹង","rom":"nɨng","fr":"va… (futur)","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/នឹង","note":"Particule de futur (« will, about to »). Aussi préposition (« to, by means of, with ») et adjectif (« stable, immobile »). Wiktionary signale une confusion graphique fréquente avec និង (« et »).","ipa":"nɨŋ"},{"id":418,"kh":"ធ្លាប់","rom":"thlŏəp","fr":"avoir déjà fait (expérience)","niveau":2,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ធ្លាប់","note":"Verbe servant de marqueur d'aspect expérientiel : « to be accustomed to, to have experience with ».","ipa":"tʰlŏəp"},{"id":422,"kh":"ដែល","rom":"dael","fr":"qui, que (relatif)","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដែល","note":"Pronom relatif multi-usage (« who, which, where, when, the fact that »). Wiktionary liste aussi un verbe (« être constant »), un nom (« reste, occasion ») et un adverbe (« déjà, toujours »).","ipa":"ɗael"},{"id":423,"kh":"ថា","rom":"thaa","fr":"que (complétive)","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ថា","note":"Conjonction complétive introduisant le discours direct/indirect. Aussi verbe « to say, tell, pronounce » / « to criticize ».","ipa":"tʰaː"},{"id":425,"kh":"យ៉ាង","rom":"yaang","fr":"de manière, façon","niveau":2,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/យ៉ាង","note":"Nom « kind, type, manner » (forme des locutions adverbiales), aussi préposition « like, as, such as » et classificateur pour les types/sortes.","ipa":"jaːŋ"},{"id":426,"kh":"ទាំង","rom":"tĕəng","fr":"tous les, à la fois","niveau":2,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទាំង","note":"Multi-catégoriel : adverbe (« also, entirely »), conjonction (« while, even though »), particule (« all, both », forme des adverbes comme ដោយ) et préposition (« including, together with »).","ipa":"tĕəŋ"},{"id":427,"kh":"ចំពោះ","rom":"cɑmpŭəh","fr":"quant à, envers","niveau":3,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចំពោះ","note":"Préposition « toward, about, concerning, as for, vis-à-vis » ; aussi adjectif « dévoué, loyal envers ».","ipa":"cɑm.ˈpŭəh"},{"id":428,"kh":"អំពី","rom":"ʼɑmpii","fr":"à propos de","niveau":2,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/អំពី","note":"Préposition. Deux sens : « about, concerning » et « from, out of ».","ipa":"ʔɑm.ˈpiː"},{"id":429,"kh":"តាម","rom":"taam","fr":"selon, le long de, suivre","niveau":1,"section":"Mots grammaticaux et connecteurs","statut":"verifie","source":"https://en.wiktionary.org/wiki/តាម","note":"Verbe « to follow, pursue, imitate, agree » et préposition « according to, by way of, along, through ».","ipa":"taːm"},{"id":430,"kh":"ថ្វីបើ","rom":"","fr":"bien que","niveau":3,"section":"Mots grammaticaux et connecteurs","statut":"a_valider","source":"https://en.wiktionary.org/wiki/ថ្វី","note":"Aucune entrée Wiktionary, SEAlang (certificat expiré, page inaccessible) ou kheng.info trouvée pour le composé ថ្វីបើ. Composants vérifiés séparément : ថ្វី = adverbe « why » (pourquoi), IPA /tʰʋəj/ (aussi un nom homographe « skill ») ; បើ = conjonction « if », sens secondaire « although » (voir id 396). Le composé lui-même reste NON_VERIFIE.","ipa":""},{"id":1001,"kh":"ចេញ","rom":"cəñ","fr":"sortir, vers l'extérieur","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចេញ","note":"Verbe « to leave, go out, depart, exit » et adverbe fonctionnant comme postverbe directionnel de série verbale : « out, off, away ».","ipa":"cəɲ"},{"id":1002,"kh":"ឡើង","rom":"laəng","fr":"monter, vers le haut","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ឡើង","note":"Verbe directionnel « to go up, ascend, rise, climb, get on/board » et adverbe postverbal « up, upwards, increasingly » ; aussi préposition « on ».","ipa":"laəŋ"},{"id":1003,"kh":"ចុះ","rom":"coh","fr":"descendre, vers le bas","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ចុះ","note":"Verbe « to descend, go down, fall » et adverbe postverbal directionnel « down ». Le sens colloquial « et toi alors ? » indiqué dans l'entrée d'origine n'a pas été retrouvé sur Wiktionary (qui ne documente que verbe/adverbe) ; retiré de `sens` faute de source, à re-vérifier auprès d'un locuteur natif ou via SEAlang/kheng.info (inaccessibles lors de cette vérification).","ipa":"coh"},{"id":1004,"kh":"នឹង","rom":"nɨng","fr":"futur","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/នឹង","note":"Particule marqueur de futur (« will, about to »). Même entrée que l'id 416 ; voir sa note sur la confusion graphique avec និង.","ipa":"nɨŋ"},{"id":1005,"kh":"ធ្លាប់","rom":"thlŏəp","fr":"expérientiel, avoir déjà","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ធ្លាប់","note":"Verbe auxiliaire d'aspect expérientiel : « to be accustomed to doing, to have experience with ». Même entrée que l'id 418.","ipa":"tʰlŏəp"},{"id":1006,"kh":"មិនទាន់","rom":"mɨn tŏən","fr":"pas encore","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/មិនទាន់","note":"Adverbe composé de មិន (« ne pas ») + ទាន់ (tŏən) ; marqueur aspectuel « not yet », peut aussi indiquer un délai manqué ou un événement prématuré.","ipa":"mɨn ˈtŏən"},{"id":1007,"kh":"ទើប","rom":"təəp","fr":"alors, alors seulement, c'est alors que ; donc, par conséquent (marqueur d'antériorité immédiate / conséquence)","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទើប","note":"Conjonction. Sens Wiktionary : 'then, and then, next' ; 'then and only then, only then' ; 'so, consequently'. Marque qu'une action ne se produit qu'à partir d'un certain point (temporel ou logique), proche de 'ce n'est qu'alors que'.","ipa":"təːp"},{"id":1008,"kh":"បាន","rom":"baan","fr":"obtenir / pouvoir, réussir à / marqueur de passé accompli ('avoir fait') ; aussi adjectif 'bien, correct' et adverbe 'bien'","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/បាន","note":"Verbe / auxiliaire. Sens Wiktionary : verbe 'to get, obtain', 'to be able to, can', marqueur de passé ('have already done something'), marqueur d'achèvement ('to intend to complete something'), causatif ('to get someone to do something'), aussi adjectif 'OK, good, fine' et adverbe 'well'. Confirme le triple emploi mentionné dans le plan (accompli / obtenir / réussir à).","ipa":"ɓaːn"},{"id":1009,"kh":"កំពុងតែ","rom":"kɑmpung tae","fr":"être en train de (progressif renforcé)","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/កំពុងតែ","note":"Entrée propre, composé de កំពុង (kɑmpung, particule d'aspect progressif : 'to be in the process of doing something') + តែ (tae). Classé verbe par Wiktionary, sens 'to be in the process of (doing something)'.","ipa":"kɑm.ˈpuŋ tae"},{"id":1010,"kh":"គួរ","rom":"kuə","fr":"devrait, devoir (moral/logique) ; aussi adjectif 'acceptable, convenable, digne de'","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/គួរ","note":"Fonctionne comme adjectif ('to be acceptable, suitable, correct, proper', 'to be worthy of, to deserve') et comme verbe modal ('should, ought to'). Exemple donné : យើងគួរខ្លាចអំពើអាក្រក់ 'nous devrions craindre le mal'.","ipa":"kuə"},{"id":1011,"kh":"តែងតែ","rom":"taeng tae","fr":"toujours, habituellement, constamment, régulièrement","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/តែងតែ","note":"Adverbe. Composé de តែង (taeng) + តែ (tae). Sens Wiktionary : 'usually, regularly, constantly, always, continually'.","ipa":"taeŋ ˈtae"},{"id":1012,"kh":"នៅតែ","rom":"nɨw tae","fr":"toujours, encore (persistance d'un état), rester tel quel","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/នៅតែ","note":"Adverbe marquant la persistance/continuation d'un état : 'to be left, remain; to leave, abandon; still; as before; invariably, constantly'. Le sens du brouillon ('toujours en train de') suggère à tort une lecture progressive (confusion possible avec កំពុងតែ) ; le sens attesté est plutôt 'encore, toujours (état inchangé)', proche de 'still' en anglais, pas un marqueur d'aspect progressif.","ipa":"nɨw ˈtae"},{"id":1013,"kh":"គ្រាន់តែ","rom":"krŏən tae","fr":"juste, seulement, simplement","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/គ្រាន់តែ","note":"Adverbe, composé de គ្រាន់ (krŏən) + តែ (tae). Sens Wiktionary : 'only, just, merely'.","ipa":"krŏən ˈtae"},{"id":1014,"kh":"ទាល់តែ","rom":"tŏəl tae","fr":"seulement si, jusqu'à ce que, à moins que, il faut que","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទាល់តែ","note":"Classé préposition par Wiktionary, composé de ទាល់ + តែ (tae). Deux sens : 'until, up to' (temporel) et 'unless, must, provided that' (conditionnel). Le sens du brouillon ('seulement si') correspond au second emploi.","ipa":"tŏəl ˈtae"},{"id":1015,"kh":"សឹង","rom":"səng","fr":"presque, à peu près, légèrement","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/សឹង","note":"Adverbe (sens 'almost (all), nearly, just a little, slightly'). Wiktionary documente aussi un nom homographe désignant un filet à lapins, sans rapport avec l'usage grammatical.","ipa":"səŋ"},{"id":1016,"kh":"សិន","rom":"sən","fr":"d'abord, pour l'instant, pour un moment (particule finale hortative polie)","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/សិន","note":"Particule : 'for now, for the time being, for a moment, first', décrite comme particule finale hortative polie. Wiktionary documente aussi des homographes sans rapport (nom : unité de longueur de 20 pyiəm ; adverbe 'parfois' ; nom propre 'Sen').","ipa":"sən"},{"id":1017,"kh":"ណា","rom":"naa","fr":"quel, lequel, où (interrogatif) ; n'importe quel, quelque part (indéfini) ; usage de bord de phrase pour adoucir un impératif/une demande (proche de 'hein' français), non détaillé comme tel dans l'entrée consultée","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ណា","note":"Wiktionary classe ណា comme pronom/déterminant : interrogatif ('which?, where?' en contexte indéfini/négatif/emphatique), locatif indéfini ('somewhere, anywhere'), universel emphatique ('wherever, anywhere'), déterminant ('any, any kind of'). L'entrée ne confirme PAS explicitement un sens de particule finale de type 'tag question / hein' isolé de ces valeurs ; le gloss du brouillon ('tag, hein ?') est une extrapolation pédagogique plausible (usage adoucissant en fin de phrase impérative, ex. ទៅណា/មកណា) mais non attestée telle quelle dans la source consultée. Ne pas présenter comme définition dictionnairique figée.","ipa":"naː"},{"id":1018,"kh":"ថា","rom":"thaa","fr":"que (conjonction de subordination introduisant le discours rapporté) ; dire, prononcer (verbe) ; aussi 'critiquer, blâmer'","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ថា","note":"Verbe ('to say, tell, pronounce' ; 'to criticize, blame') et conjonction ('that', introduisant discours direct ou indirect). Exemple : ខ្ញុំបាននិយាយថាខ្ញុំទៅ 'j'ai dit que j'irais'.","ipa":"tʰaː"},{"id":1019,"kh":"ដែល","rom":"dael","fr":"qui, que, lequel (pronom relatif, introduit une proposition relative) ; aussi adverbe 'déjà, une fois' (expérience antérieure)","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដែល","note":"Pronom relatif ('who, which', introduit une relative, 'of/to/in/at which/whom', 'the fact that'). Wiktionary documente aussi un verbe ('to be constant/unchanged', 'to be handed down'), un nom ('leftover') et un adverbe ('ever, already, always', expérience passée).","ipa":"ɗael"},{"id":1020,"kh":"ព្រោះ","rom":"prŭəh","fr":"parce que","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ព្រោះ","note":"Conjonction de subordination causale ('because'). Wiktionary documente aussi un verbe homographe 'semer des graines' (étymologie commune, proto-môn-khmer *ruh/*ruəh 'tomber, se disperser'), sans rapport avec l'usage grammatical courant.","ipa":"prŭəh"},{"id":1021,"kh":"បើ","rom":"baə","fr":"si (conditionnel) ; aussi 'bien que' selon contexte","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/បើ","note":"Conjonction : 'if' ou 'although' selon le contexte.","ipa":"ɓaə"},{"id":1022,"kh":"ដូច្នេះ","rom":"doucneh","fr":"donc, ainsi, de cette façon (aussi adjectif 'être comme ça, de ce genre')","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដូច្នេះ","note":"Classé adjectif ('to be like this, to be this kind of') et adverbe ('so, thus, like this, this way' ou 'so, therefore'). Composé de ដូច (douc, 'comme') + នេះ (nih, 'ce/ceci'). Exemple : និយាយដូច្នេះមិនសមទេ 'ce n'est pas approprié de parler ainsi'.","ipa":"ɗou.ˈcʰneh"},{"id":1023,"kh":"ដើម្បី","rom":"daəmbəy","fr":"pour, afin de (but) ; pour, au profit de (préposition)","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ដើម្បី","note":"Classé conjonction ('in order to, so that') et préposition ('for, for the sake of, to, toward').","ipa":"ɗaəm.ˈɓəj"},{"id":1024,"kh":"ពេល","rom":"peel","fr":"temps, moment, instant, période (nom) ; introduit une proposition temporelle 'quand, au moment où'","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ពេល","note":"Wiktionary classe ពេល uniquement comme NOM : 'time; moment, instant, period of time' (et, sans rapport, une plante ornementale, Mirabilis jalapa). L'entrée consultée ne documente pas d'emploi en conjonction 'quand' à part entière : cet usage se construit typiquement via ពេលដែល ou en tête de proposition temporelle avec ពេល nominal ('au moment où...'), pas comme conjonction lexicalisée indépendante.","ipa":"peːl"},{"id":1025,"kh":"ក្រោយពី","rom":"","fr":"après (que)","niveau":0,"section":"Mots-outils des blocs","statut":"a_valider","source":"https://en.wiktionary.org/wiki/ក្រោយ ; https://en.wiktionary.org/wiki/ពី","note":"Locution non attestée comme entrée propre sur Wiktionary (404). Composants vérifiés séparément : ក្រោយ (kraoy) adjectif/adverbe/préposition 'after, behind, later, next' ; ពី (pii) préposition 'from, since, about'. La recherche web ne confirme pas ក្រោយពី comme forme standard attestée (un résultat suggère que la locution standard documentée est plutôt បន្ទាប់ពី 'après'). Sens plausible par composition ('après [le fait] de') mais non confirmé par une source lexicale.","ipa":""},{"id":1026,"kh":"មុននឹង","rom":"","fr":"avant (que)","niveau":0,"section":"Mots-outils des blocs","statut":"a_valider","source":"https://en.wiktionary.org/wiki/មុន ; https://en.wiktionary.org/wiki/នឹង","note":"Locution non attestée comme entrée propre sur Wiktionary (404). Composants vérifiés séparément : មុន (mun) adverbe/préposition 'before, previously, formerly, ago' ; នឹង (nɨng) particule de futur 'will, about to' / préposition 'to, with, by means of'. Sens plausible par composition ('avant [de/que]') mais non confirmé comme locution figée par une source lexicale.","ipa":""},{"id":1027,"kh":"ទេ","rom":"tei","fr":"particule finale de question oui/non ; particule de négation (avec préverbe négatif មិន/អត់/ពុំ/ឥត)","niveau":0,"section":"Mots-outils des blocs","statut":"verifie","source":"https://en.wiktionary.org/wiki/ទេ","note":"Particule. Deux emplois attestés : particule finale interrogative dans les questions oui/non (ex. ថ្លៃទេ ? 'combien ça coûte / cher ?') ; particule finale de négation 'non, ne...pas', qui accompagne typiquement une particule préverbale négative (មិន mɨn, ពុំ pum, អត់ ʼɑt, ឥត ʼət).","ipa":"tei"},{"id":1028,"kh":"ឬទេ","rom":"","fr":"ou pas, ou non","niveau":0,"section":"Mots-outils des blocs","statut":"a_valider","source":"https://en.wiktionary.org/wiki/ឬ ; https://en.wiktionary.org/wiki/ទេ","note":"Pas d'entrée propre trouvée pour la locution ឬទេ. Composants vérifiés séparément : ឬ (rȳ) conjonction 'or' (aussi particule interrogative finale 'n'est-ce pas ?') ; ទេ (tei) particule finale de question/négation (voir id 1027). Assemblage compositionnel plausible ('or [particule de question]' = 'ou pas'), non attesté comme unité lexicale propre.","ipa":""},{"id":1029,"kh":"ហើយឬនៅ","rom":"","fr":"déjà (fait) ou pas encore ?","niveau":0,"section":"Mots-outils des blocs","statut":"a_valider","source":"https://en.wiktionary.org/wiki/ហើយ ; https://en.wiktionary.org/wiki/ឬ ; https://en.wiktionary.org/wiki/នៅ","note":"Pas d'entrée propre pour la locution complète, mais l'entrée de នៅ mentionne explicitement ហើយឬនៅ (haəy rɨɨ nɨv) comme exemple illustratif signifiant 'déjà ?' / 'pas encore ?', utilisé aussi en réponse pour dire 'pas encore'. Composants : ហើយ (haəy) marqueur d'accompli 'déjà' / conjonction 'et, puis' ; ឬ (rȳ) 'ou' ; នៅ (nɨw) verbe/adverbe 'rester, encore, toujours', qui en fin de question de ce type signifie 'pas encore'. Locution attestée en exemple d'usage mais pas comme entrée lexicale séparée : NON_VERIFIE au sens strict demandé, bien que fortement étayée.","ipa":""},{"id":1030,"kh":"មែនទេ","rom":"","fr":"n'est-ce pas (question de confirmation)","niveau":0,"section":"Mots-outils des blocs","statut":"a_valider","source":"https://en.wiktionary.org/wiki/មែន ; https://en.wiktionary.org/wiki/ទេ","note":"Pas d'entrée propre trouvée pour la locution មែនទេ. Composants vérifiés séparément : មែន (mɛɛn) adjectif/adverbe 'vrai, réel, exact, effectivement' (aussi interjection d'affirmation) ; ទេ (tei) particule finale de question/négation (voir id 1027). Assemblage compositionnel plausible ('vrai, non ?' = 'n'est-ce pas'), non attesté comme unité lexicale propre dans les sources consultées.","ipa":""}];
+const EMBED_BLOCS = [{"id":"serialisation","ordre":1,"titre":"La sérialisation verbale","regle":"Le khmer enchaîne les verbes en série au lieu d'utiliser des auxiliaires.","gabarit":"VERBE + <b>DIRECTION</b> + (DÉICTIQUE)","mots":[1001,1002,1003],"exercices":[{"type":"choix","question":"Dans une chaîne de verbes en série, combien de marqueurs d'aspect faut-il ?","options":["Un seul, en tête, qui porte sur toute la chaîne","Un sur chaque verbe de la chaîne","Un seul, à la fin de la chaîne","Aucun, la sérialisation exclut l'aspect"],"reponse":0,"explication":"Un seul marqueur en tête porte sur toute la série. Le répéter est une erreur."},{"type":"choix","question":"Les directionnels ចេញ, ឡើង et ចុះ se placent où par rapport au verbe principal ?","options":["Après le verbe","Avant le verbe","En fin de phrase seulement","Au choix, les deux positions se valent"],"reponse":0,"explication":"Ce sont des directionnels postverbaux. Ils suivent le verbe qu'ils orientent."}]},{"id":"temps","ordre":2,"titre":"Le temps au complet","regle":"Le khmer n'a pas de conjugaison : le temps passe par des marqueurs d'aspect.","gabarit":"SUJET + (NÉG) + <b>MARQUEUR</b> + VERBE + (OBJET) + (MARQUEUR FINAL)","mots":[1004,1005,1006,1007,1008,1009,1010],"exercices":[{"type":"position","question":"Où se place ធ្លាប់, le marqueur d'expérience vécue ?","gabarit":"SUJET + ___ + VERBE + OBJET","options":["Avant le verbe, comme បាន et កំពុង","Après le verbe","En fin de phrase","Avant le sujet"],"reponse":0,"explication":"ធ្លាប់ est un auxiliaire préverbal. Il occupe le même emplacement que បាន et កំពុង."},{"type":"choix","question":"Quelle est la différence entre អាច seul et អាច … បាន ?","options":["អាច seul dit la capacité possible, អាច … បាន dit la capacité réalisée","Il n'y a aucune différence","អាច seul est familier, អាច … បាន est poli","អាច … បាន est la forme négative"],"reponse":0,"explication":"បាន en position postverbale est résultatif : il dit que la chose a effectivement abouti."},{"type":"choix","question":"Quel piège graphique guette នឹង, le marqueur de futur ?","options":["Il se confond avec និង « et », qui n'en diffère que par un signe vocalique","Il se confond avec នៅ « encore »","Il s'écrit de deux façons également correctes","Il ne s'écrit jamais, il est seulement oral"],"reponse":0,"explication":"នឹង (futur) et និង (et) sont couramment confondus à l'écrit, y compris par des locuteurs natifs. À l'oral ils se distinguent nettement."}]},{"id":"particules","ordre":3,"titre":"Les particules de nuance","regle":"Ces particules transforment des énoncés juxtaposés en discours modulé.","mots":[1011,1012,1013,1014,1015,1016,1017],"exercices":[{"type":"choix","question":"នៅតែ marque quoi exactement ?","options":["La persistance d'un état : ça continue, ça reste tel quel","Une action en cours de déroulement","Une action achevée","Une action à venir"],"reponse":0,"explication":"Correction issue de la vérification : នៅតែ est un marqueur de persistance, proche de « still », et non un progressif. Le progressif est កំពុងតែ."},{"type":"choix","question":"ទាល់តែ se couple habituellement avec quel autre marqueur ?","options":["ទើប","បាន","ហើយ","ណា"],"reponse":0,"explication":"ទាល់តែ … ទើប exprime la condition nécessaire : seulement si X, alors seulement Y."}]},{"id":"subordination","ordre":4,"titre":"La subordination","regle":"Le khmer préfère souvent la parataxe ; la subordination s'ajoute, elle ne remplace rien.","gabarit":"NOM + <b>ដែល</b> + PROPOSITION &nbsp;·&nbsp; VERBE DE DIRE + <b>ថា</b> + PROPOSITION","mots":[1018,1019,1020,1021,1022,1023,1024,1025,1026],"exercices":[{"type":"position","question":"Où se place la proposition relative introduite par ដែល ?","gabarit":"NOM + ___ ","options":["Après le nom, jamais avant","Avant le nom","Au choix selon le registre","En fin de phrase"],"reponse":0,"explication":"ដែល est strictement postnominal. Antéposer la relative est un calque du français."},{"type":"choix","question":"Dans une relative khmère, que fait-on du pronom repris ?","options":["Rien, il n'y en a pas : le khmer laisse une lacune","On le répète après le verbe","On le remplace par ដែល une seconde fois","On l'antépose"],"reponse":0,"explication":"Stratégie de lacune. Insérer un pronom résomptif (« le livre que je le lis ») est une erreur typique."},{"type":"choix","question":"ថា a un second emploi, lequel ?","options":["C'est aussi le verbe « dire »","C'est aussi un marqueur de futur","C'est aussi une particule de question","C'est aussi un classificateur"],"reponse":0,"explication":"Deux usages pour un seul apprentissage : la conjonction complétive et le verbe « dire »."}]},{"id":"questions","ordre":5,"titre":"Les formes de question","regle":"La question se marque par une particule finale, sans toucher à l'ordre des mots.","mots":[1027,1028,1029,1030],"exercices":[{"type":"choix","question":"Où se placent les mots interrogatifs en khmer ?","options":["À leur place normale dans la phrase, jamais en tête","Toujours en tête de phrase, comme en français","Toujours en fin de phrase","Ils sont facultatifs"],"reponse":0,"explication":"Les mots interrogatifs restent in situ. Les antéposer est un calque du français."},{"type":"choix","question":"À une question en ហើយឬនៅ, que répond-on ?","options":["ហើយ si c'est fait, នៅ ou មិនទាន់ទេ sinon","បាទ ou ចាស uniquement","On répète la question entière","ទេ dans les deux cas"],"reponse":0,"explication":"C'est la question du parfait : elle demande si l'action est accomplie ou pas encore."}]},{"id":"palier-a","ordre":6,"titre":"Palier A · le socle manquant","regle":"Les mots de niveau 1 qui manquaient à l'inventaire.","mots":[27,46,63,65,78,117,119,120,131,132,191,198,276,278,289,297,318,319,329,330,334,348,349,361,363,381,393,394,396,397,399,405,408,410,412,416,422,423,429],"exercices":[{"type":"sens","mot":27,"explication":"Reconnaissance : du khmer vers le sens."},{"type":"production","mot":46,"explication":"Production : du sens vers le khmer."}]},{"id":"palier-b","ordre":7,"titre":"Palier B · conversation simple","regle":"Les mots de niveau 2, une fois le socle acquis.","mots":[15,39,40,76,79,81,83,86,99,102,107,109,110,122,128,133,138,141,146,147,148,152,154,155,160,175,179,192,201,203,206,207,208,217,218,226,230,240,241,243,244,246,248,249,274,275,277,282,283,315,316,335,350,352,355,356,374,379,395,401,418,425,426,428],"exercices":[{"type":"sens","mot":15,"explication":"Reconnaissance : du khmer vers le sens."},{"type":"production","mot":39,"explication":"Production : du sens vers le khmer."}]},{"id":"palier-c","ordre":8,"titre":"Palier C · conversation aisée","regle":"Les mots de niveau 3, le registre plus abstrait.","mots":[16,47,112,139,140,142,143,167,186,196,202,204,205,213,221,285,286,312,337,338,353,370,413,414,427,430],"exercices":[{"type":"sens","mot":16,"explication":"Reconnaissance : du khmer vers le sens."},{"type":"production","mot":47,"explication":"Production : du sens vers le khmer."}]}];
+
+/* ================= état ================= */
+const KEY = "khmer-app-v1";
+/* vus     : mots déjà découverts (présentés au moins une fois)
+   lecons  : blocs dont la leçon a été lue
+   neufs   : mots découverts aujourd'hui, borné par NOUVEAUX_PAR_JOUR */
+let S = {mots:{}, blocs:{}, vus:{}, lecons:{}, jour:null, faits:0, neufs:0};
+try{ Object.assign(S, JSON.parse(localStorage.getItem(KEY)||"{}")); }catch(e){}
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} };
+
+const MOTS = new Map(EMBED_MOTS.map(m => [m.id, m]));
+const AUJ = () => new Date().toISOString().slice(0,10);
+const PALIERS = [1,3,7,16,35,60];
+/* 4 mots neufs par jour : le budget déclaré est de 5 à 8 minutes.
+   Au-delà, la découverte mange toute la session et rien ne se consolide. */
+const NOUVEAUX_PAR_JOUR = 4;
+
+/* réinitialise les compteurs du jour */
+if(S.jour !== AUJ()){ S.jour = AUJ(); S.faits = 0; S.neufs = 0; save(); }
+
+function etat(id){ return S.mots[id] || (S.mots[id] = {n:0, gap:0, du:AUJ(), best:0}); }
+function du(id){ return etat(id).du <= AUJ(); }
+
+function repond(id, juste){
+  const e = etat(id);
+  if(juste){
+    e.n = Math.min(e.n+1, PALIERS.length-1);
+    e.gap = PALIERS[e.n];
+    e.best = Math.max(e.best, e.gap);
+  }else{
+    e.n = 0; e.gap = 1;
+  }
+  const d = new Date(); d.setDate(d.getDate()+e.gap);
+  e.du = d.toISOString().slice(0,10);
+  S.faits++;
+  save();
+}
+
+/* ================= navigation ================= */
+const PAGES = ["rev","bloc","sons","dico","val"];
+function go(p){
+  PAGES.forEach(x => {
+    document.getElementById("p-"+x).classList.toggle("hidden", x!==p);
+    document.getElementById("t-"+x).setAttribute("aria-selected", String(x===p));
+  });
+  ({rev:vueRev, bloc:vueBloc, sons:vueSons, dico:vueDico, val:vueVal})[p]();
+}
+
+/* ================= table des sons =================
+   Les symboles et leur valeur sont ceux de l'API standard. Les
+   rapprochements avec le français sont des APPROXIMATIONS pédagogiques,
+   pas des équivalences : aucun son khmer n'a d'équivalent français exact. */
+const SONS = {
+ "La longueur, le point critique":[
+  ["ː","allonge la voyelle qui précède. <b>Distinctif en khmer</b> : deux mots peuvent ne différer que par là. Le français n'a pas ce contraste, c'est celui qu'une oreille française rate le plus."],
+  ["aː","le <i>a</i> de « patte », tenu deux fois plus longtemps"],
+  ["a","le <i>a</i> de « patte », bref"],
+  ["ŏ ĕ ŭ","voyelle brève (notation de la source)"],
+ ],
+ "Les voyelles sans équivalent français":[
+  ["ə","le <i>e</i> de « petit », « le »"],
+  ["əː","le même, allongé"],
+  ["ɨ","entre <i>i</i> et <i>ou</i>, lèvres <b>non</b> arrondies. Le français ne l'a pas : dire <i>i</i> en gardant les lèvres plates"],
+  ["ɤ","proche du <i>eu</i> de « peur », lèvres non arrondies"],
+  ["ɔ","le <i>o</i> ouvert de « sort »"],
+  ["o","le <i>o</i> fermé de « sot »"],
+  ["ɛ","le <i>è</i> de « près »"],
+  ["e","le <i>é</i> de « été »"],
+ ],
+ "Les diphtongues":[
+  ["ɨə","glisse de ɨ vers ə, d'un seul souffle"],
+  ["uə","glisse de <i>ou</i> vers ə"],
+  ["iə","glisse de <i>i</i> vers ə"],
+  ["aə","glisse de <i>a</i> vers ə"],
+  ["ao","glisse de <i>a</i> vers <i>o</i>"],
+ ],
+ "Les consonnes qui piègent":[
+  ["ɲ","le <i>gn</i> de « agneau »"],
+  ["ŋ","le <i>ng</i> de « parking », sans prononcer le g"],
+  ["c","proche de <i>tch</i>, mais plus doux et plus en avant"],
+  ["ɓ","un <i>b</i> implosif : l'air rentre au lieu de sortir. Distinct du b français"],
+  ["ɗ","un <i>d</i> implosif, même principe"],
+  ["ʔ","un coup de glotte, l'arrêt au milieu de « hé-ho »"],
+  ["r","roulé, comme en espagnol ou en italien"],
+ ],
+ "L'aspiration":[
+  ["pʰ tʰ cʰ kʰ","un souffle net après la consonne. <b>Ce n'est pas le <i>f</i> ni le <i>ch</i> français</b> : pʰ est un <i>p</i> soufflé, pas un <i>f</i>"],
+  ["ˈ","la syllabe qui suit porte l'accent"],
+ ],
+};
+
+function vueSons(){
+  document.getElementById("p-sons").innerHTML = `
+  <h2>Les sons</h2>
+  <p class="muted">La ligne entre barres obliques sous chaque mot est sa prononciation,
+  notée en alphabet phonétique international. Cette table dit ce que valent les symboles.
+  Elle sert pour tous les mots, y compris ceux qui viendront.</p>
+  <div class="call"><strong>Ce sont des approximations.</strong> Aucun son khmer n'a
+  d'équivalent français exact. Ces rapprochements servent à démarrer, ils ne remplacent pas
+  d'entendre le son.</div>
+  ` + Object.entries(SONS).map(([titre, lignes]) => `
+    <h3>${titre}</h3>
+    <div class="tw"><table>
+      <tbody>${lignes.map(([s,d]) => `<tr>
+        <td class="k" style="font-family:var(--fm);font-size:1.3rem;color:var(--accent);white-space:nowrap">${s}</td>
+        <td>${d}</td></tr>`).join("")}</tbody>
+    </table></div>`).join("");
+}
+
+/* ================= file de session ================= */
+function blocActif(){
+  for(const b of EMBED_BLOCS){
+    const st = S.blocs[b.id] || {};
+    if(!st.fini) return b;
+  }
+  return null;
+}
+
+/* La session se compose dans cet ordre, et l'ordre est le point important :
+   on n'interroge jamais sur ce qui n'a pas d'abord été montré.
+     1. la leçon du bloc, si elle n'a pas été lue
+     2. les mots neufs, présentés sans notation, dans la limite du quota
+     3. les révisions dues
+     4. les exercices du bloc, seulement une fois la leçon lue          */
+function file(){
+  const b = blocActif();
+  if(!b) return [];
+
+  if(!S.lecons[b.id]) return [{k:"lecon", bloc:b}];
+
+  const neufs = [], revisions = [], exos = [];
+
+  for(const mid of (b.mots||[])){
+    const m = MOTS.get(mid);
+    if(!m) continue;
+    if(!S.vus[mid]){
+      if(neufs.length + S.neufs < NOUVEAUX_PAR_JOUR) neufs.push({k:"neuf", mot:m, bloc:b});
+    }else if(du(mid)){
+      revisions.push({k:"mot", mot:m, bloc:b});
+    }
+  }
+
+  (b.exercices||[]).forEach((e,i) => {
+    const key = b.id+":ex"+i;
+    if(du(key)) exos.push({k:"ex", ex:e, id:key, bloc:b});
+  });
+
+  // les mots des blocs déjà finis qui redeviennent dus
+  for(const bb of EMBED_BLOCS){
+    if(bb.id === b.id) continue;
+    if(!(S.blocs[bb.id]||{}).fini) continue;
+    for(const mid of (bb.mots||[])){
+      if(S.vus[mid] && du(mid) && MOTS.has(mid))
+        revisions.push({k:"mot", mot:MOTS.get(mid), bloc:bb});
+    }
+  }
+
+  return [...neufs, ...revisions, ...exos];
+}
+
+/* nombre de mots du bloc en cours pas encore découverts */
+function resteADecouvrir(b){
+  return (b.mots||[]).filter(id => !S.vus[id]).length;
+}
+
+function decouvert(id){
+  S.vus[id] = AUJ();
+  S.neufs++;
+  const e = etat(id);
+  e.n = 0; e.gap = 1;
+  const d = new Date(); d.setDate(d.getDate()+1);
+  e.du = d.toISOString().slice(0,10);
+  save();
+}
+
+/* ================= vue Réviser ================= */
+let courant = null, revele = false;
+
+function vueRev(){
+  const el = document.getElementById("p-rev");
+  const b = blocActif();
+
+  if(!b){
+    el.innerHTML = `<h2>Tous les blocs sont faits</h2>
+      <p class="muted">Il n'y a plus de nouveau bloc à ouvrir. Les révisions
+      continuent au fil des échéances.</p>`;
+    return;
+  }
+
+  const f = file();
+  if(!f.length){
+    const reste = resteADecouvrir(b);
+    el.innerHTML = `<h2>C'est fait pour aujourd'hui</h2>
+      <p class="muted">${S.faits} carte${S.faits>1?"s":""} révisée${S.faits>1?"s":""},
+      ${S.neufs} mot${S.neufs>1?"s":""} découvert${S.neufs>1?"s":""}.</p>
+      ${reste ? `<div class="call"><strong>${reste} mot${reste>1?"s":""} encore à découvrir</strong>
+        dans ce bloc. Le quota est de ${NOUVEAUX_PAR_JOUR} par jour, pour que la découverte
+        ne mange pas toute la session. Ils viendront demain.</div>` : ``}
+      <div class="card">
+        <div class="pill">bloc en cours</div>
+        <h3 style="margin-top:.5rem">${esc(b.titre)}</h3>
+        <p class="regle">${esc(b.regle)}</p>
+        ${reste ? `` : `<div class="row">
+          <button class="act" onclick="finirBloc('${b.id}')">J'ai fini ce bloc</button>
+        </div>`}
+      </div>
+      <div class="row">
+        <button class="act" onclick="relireLecon('${b.id}')">Relire la leçon</button>
+      </div>`;
+    return;
+  }
+
+  // une leçon ou un mot neuf passe toujours en premier : on ne teste
+  // jamais avant d'avoir montré. Les révisions se tirent au sort.
+  if(f[0].k === "lecon" || f[0].k === "neuf") courant = f[0];
+  else courant = f[Math.floor(Math.random()*Math.min(f.length,5))];
+
+  revele = false;
+  rendCarte(el, f.length, b);
+}
+
+function relireLecon(id){ S.lecons[id] = false; save(); vueRev(); }
+
+function rendCarte(el, reste, b){
+  const c = courant;
+  const entete = `
+    <div class="stats">
+      <div><b>${reste}</b><span>en file</span></div>
+      <div><b>${S.neufs}/${NOUVEAUX_PAR_JOUR}</b><span>mots neufs</span></div>
+      <div><b>${S.faits}</b><span>révisions</span></div>
+    </div>
+    <div class="pill">${esc(b.titre)}</div>`;
+
+  /* --- la leçon du bloc : rien n'est demandé, tout est montré --- */
+  if(c.k === "lecon"){
+    const mots = (b.mots||[]).map(id=>MOTS.get(id)).filter(Boolean);
+    el.innerHTML = `
+      <div class="pill">bloc ${b.ordre} · la leçon</div>
+      <h2>${esc(b.titre)}</h2>
+      <div class="card">
+        <p class="regle">${esc(b.regle)}</p>
+        ${b.gabarit?`<div class="gabarit">${b.gabarit}</div>`:``}
+        <h3>Les ${mots.length} mots du bloc</h3>
+        ${mots.map(m=>`<div class="entry">
+          <span class="kh">${esc(m.kh)}</span>
+          <span>${phon(m)||"—"}</span>
+          <span class="fr">${esc(m.fr)}</span>
+          ${statutPill(m)}
+        </div>`).join("")}
+        <div class="row">
+          <button class="act pri" onclick="lu('${b.id}')">J'ai lu, on commence</button>
+        </div>
+      </div>
+      <p class="muted">Les mots seront introduits ${NOUVEAUX_PAR_JOUR} par jour, puis révisés
+      à intervalles croissants. Tu peux revenir à cette leçon quand tu veux.</p>`;
+    return;
+  }
+
+  /* --- découverte d'un mot neuf : présenté, pas interrogé --- */
+  if(c.k === "neuf"){
+    const m = c.mot;
+    el.innerHTML = entete + `
+      <div class="card q">
+        <div class="pill val" style="margin-bottom:.8rem">nouveau mot</div>
+        <div class="prompt-kh kh">${esc(m.kh)}</div>
+        ${phon(m)}
+        <div class="answer">
+          <div class="fr">${esc(m.fr)}</div>
+          ${statutPill(m)}
+          ${m.note?`<div class="note">${esc(m.note)}</div>`:``}
+        </div>
+        <div class="row" style="justify-content:center">
+          <button class="act pri" onclick="vuNeuf(${m.id})">Compris, au suivant</button>
+        </div>
+      </div>
+      <p class="muted">Il reviendra demain, puis de plus en plus espacé.</p>`;
+    return;
+  }
+
+  if(c.k === "mot"){
+    const m = c.mot;
+    const prod = Math.random() < .5;   // moitié reconnaissance, moitié production
+    c.prod = prod;
+    el.innerHTML = entete + `
+      <div class="card q">
+        ${prod
+          ? `<div class="prompt-fr">${esc(m.fr)}</div>`
+          : `<div class="prompt-kh kh">${esc(m.kh)}</div>
+             ${phon(m)}`}
+        <div id="ans" class="answer hidden">
+          ${prod
+            ? `<div class="prompt-kh kh">${esc(m.kh)}</div>
+               ${phon(m)}`
+            : `<div class="fr">${esc(m.fr)}</div>`}
+          ${statutPill(m)}
+          ${m.note?`<div class="note">${esc(m.note)}</div>`:``}
+        </div>
+        <div class="row" id="ctl" style="justify-content:center">
+          <button class="act pri" onclick="reveler()">Voir la réponse</button>
+        </div>
+      </div>`;
+  }else{
+    const e = c.ex;
+    el.innerHTML = entete + `
+      <div class="card">
+        <p style="font-size:1.15rem">${esc(e.question)}</p>
+        ${e.gabarit?`<div class="gabarit">${e.gabarit.replace("___","<b>___</b>")}</div>`:``}
+        <div class="opts" id="opts">
+          ${e.options.map((o,i)=>`<button onclick="choisir(${i})">${o}</button>`).join("")}
+        </div>
+        <div id="ans" class="hidden">
+          <div class="call"><strong>Pourquoi.</strong> ${esc(e.explication)}</div>
+          <div class="row"><button class="act pri" onclick="vueRev()">Suivant</button></div>
+        </div>
+      </div>`;
+  }
+}
+
+function reveler(){
+  revele = true;
+  document.getElementById("ans").classList.remove("hidden");
+  document.getElementById("ctl").innerHTML =
+    `<button class="act" onclick="noter(false)">À revoir</button>
+     <button class="act pri" onclick="noter(true)">Je savais</button>`;
+}
+
+function noter(juste){
+  repond(courant.mot.id, juste);
+  vueRev();
+}
+
+function choisir(i){
+  const e = courant.ex;
+  const btns = [...document.querySelectorAll("#opts button")];
+  btns.forEach((b,j)=>{
+    b.disabled = true;
+    if(j === e.reponse) b.classList.add("good");
+    else if(j === i) b.classList.add("bad");
+  });
+  repond(courant.id, i === e.reponse);
+  document.getElementById("ans").classList.remove("hidden");
+}
+
+function lu(id){ S.lecons[id] = AUJ(); save(); vueRev(); }
+function vuNeuf(id){ decouvert(id); vueRev(); }
+
+function finirBloc(id){
+  S.blocs[id] = Object.assign(S.blocs[id]||{}, {fini:true, le:AUJ()});
+  save(); vueRev();
+}
+
+/* ================= vue Blocs ================= */
+function vueBloc(){
+  const el = document.getElementById("p-bloc");
+  const actif = blocActif();
+  el.innerHTML = `<h2>La séquence</h2>
+    <p class="muted">Un bloc à la fois, dans l'ordre. Le suivant s'ouvre quand
+    le précédent est marqué fini.</p>` +
+    EMBED_BLOCS.map(b => {
+      const st = S.blocs[b.id]||{};
+      const en = actif && actif.id===b.id;
+      const mots = (b.mots||[]).map(id=>MOTS.get(id)).filter(Boolean);
+      return `<div class="bloc">
+        <div class="bloc-h">
+          <span class="n">BLOC ${b.ordre}</span>
+          <h3>${esc(b.titre)}</h3>
+          <span class="pill ${st.fini?"ok":en?"val":""}">${st.fini?"fini":en?"en cours":"à venir"}</span>
+        </div>
+        <div class="bloc-b">
+          <p class="regle">${esc(b.regle)}</p>
+          ${b.gabarit?`<div class="gabarit">${b.gabarit}</div>`:``}
+          ${mots.length?`<h3>Les mots</h3>`+mots.map(m=>`
+            <div class="entry">
+              <span class="kh">${esc(m.kh)}</span>
+              <span>${phon(m)||"—"}</span>
+              <span class="fr">${esc(m.fr)}</span>
+              ${statutPill(m)}
+            </div>`).join(""):``}
+        </div>
+      </div>`;
+    }).join("");
+}
+
+/* ================= vue Dico ================= */
+function vueDico(){
+  const el = document.getElementById("p-dico");
+  el.innerHTML = `<h2>Dictionnaire</h2>
+    <input type="search" id="q" placeholder="Chercher en français, en khmer ou en romanisation"
+           oninput="filtre()" autocomplete="off">
+    <div id="res"></div>`;
+  filtre();
+}
+
+function filtre(){
+  const q = (document.getElementById("q").value||"").toLowerCase().trim();
+  const list = EMBED_MOTS.filter(m => !q ||
+    m.fr.toLowerCase().includes(q) || m.kh.includes(q) ||
+    (m.rom||"").toLowerCase().includes(q));
+  document.getElementById("res").innerHTML =
+    `<p class="muted">${list.length} mot${list.length>1?"s":""}</p>` +
+    list.map(m=>`<div class="entry">
+      <span class="kh">${esc(m.kh)}</span>
+      <span>${phon(m)||"—"}</span>
+      <span class="fr">${esc(m.fr)}</span>
+      ${statutPill(m)}
+    </div>`).join("");
+}
+
+/* ================= vue À valider ================= */
+function vueVal(){
+  const el = document.getElementById("p-val");
+  const list = EMBED_MOTS.filter(m => m.statut !== "verifie");
+  el.innerHTML = `<h2>À faire valider</h2>
+    <div class="call warn">
+      <p><strong>Pourquoi cette liste existe.</strong> Ces entrées n'ont pas pu être
+      confirmées dans un dictionnaire de référence. Leur graphie ou leur sens vient
+      d'une source faible, ou le mot n'existe pas comme unité dans les dictionnaires
+      consultés. Fais-les vérifier par un locuteur natif avant de les apprendre.</p>
+    </div>
+    <p class="muted">${list.length} entrée${list.length>1?"s":""} en attente.</p>` +
+    list.map(m=>`<div class="card">
+      <div class="entry" style="border:none;padding:0">
+        <span class="kh" style="font-size:2rem">${esc(m.kh)}</span>
+        <span>${phon(m)||"—"}</span>
+        <span class="fr">${esc(m.fr)}</span>
+        ${statutPill(m)}
+      </div>
+      ${m.note?`<p class="muted" style="margin:.6rem 0 0">${esc(m.note)}</p>`:``}
+    </div>`).join("");
+}
+
+/* ================= utilitaires ================= */
+/* rom = translittération lettre à lettre ; ipa = prononciation réelle.
+   Les deux se ressemblent en khmer, mais l'API porte la longueur,
+   l'aspiration et les implosives, que la romanisation efface. */
+function phon(m){
+  const r = m.rom ? `<span class="rom">${esc(m.rom)}</span>` : "";
+  const i = m.ipa ? `<span class="ipa">/${esc(m.ipa)}/</span>` : "";
+  return r && i ? r + " &nbsp;" + i : (r || i);
+}
+function statutPill(m){
+  if(m.statut === "verifie")   return `<span class="pill ok">vérifié</span>`;
+  if(m.statut === "a_valider") return `<span class="pill val">à valider</span>`;
+  return `<span class="pill no">non vérifié</span>`;
+}
+function esc(s){
+  return String(s==null?"":s).replace(/[&<>"]/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+}
+
+go("rev");
+</script>
+</body>
+</html>
