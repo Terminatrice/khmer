@@ -34,6 +34,16 @@ Trois temps, et l'ordre est le point important : **on n'interroge jamais sur ce 
 
 Deux lignes distinctes par mot. `rom` est la translittération de la source, `ipa` la prononciation en alphabet phonétique. L'onglet **Sons** donne la clé des symboles, en approximations françaises assumées comme telles.
 
+## Audio
+
+Enregistrements natifs de kheng.info (voix de Sinett Sun), copiés dans `audio/` par le build depuis `../vocab/audio/kheng/`, un fichier par mot nommé d'après son id. Un mot composé sans enregistrement entier est joué partie par partie (`12-1.mp3`, `12-2.mp3`), à condition que toutes les parties existent. Sinon le mot affiche « pas d'audio ». Aucune voix de synthèse.
+
+kheng.info ne publie pas de licence : la republication dans ce dépôt public est un choix assumé par Daphnée le 08/11/2026.
+
+## Tests
+
+`node --test tests/*.test.js` (kit commun `../../kit-apps`, Safari simulé).
+
 ## Statuts
 
 | Statut | Sens |
